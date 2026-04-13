@@ -4,7 +4,6 @@ const GEMINI_API_KEY = "AIzaSyCooWFRTLsgV4t3fsxQ92I8sHoawbMGfbk";
 async function askNawabAI() {
     const userInput = document.getElementById('user-query').value;
     const chatDisplay = document.getElementById('chat-display');
-    const sendBtn = document.getElementById('send-btn');
     
     if(!userInput) return;
 
@@ -38,7 +37,8 @@ async function askNawabAI() {
         chatDisplay.innerHTML += `<div style="margin-bottom:15px;"><span style="background:#222; color:#fff; padding:10px 15px; border-radius:15px; border-left:4px solid var(--primary); display:inline-block; line-height:1.5;"><b>Nawab AI:</b> ${aiResponse}</span></div>`;
         
     } catch (error) {
-        document.getElementById(loadingId).innerHTML = `<span style="color:red;">Error: Jani connection nahi ban raha! Key check karein.</span>`;
+        if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+        chatDisplay.innerHTML += `<div style="color:red; margin-bottom:15px;">Error: Jani connection nahi ban raha! Key check karein.</div>`;
     }
     chatDisplay.scrollTop = chatDisplay.scrollHeight;
 }
@@ -46,10 +46,14 @@ async function askNawabAI() {
 // Module Management
 function loadModule(moduleName) {
     const display = document.getElementById('module-display');
+    
+    // Remove active class from all buttons
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     
-    // Set active button
-    if(event) event.currentTarget.classList.add('active');
+    // Add active class to clicked button if event exists
+    if(window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+    }
 
     if(moduleName === 'ai') {
         display.innerHTML = `
@@ -58,9 +62,16 @@ function loadModule(moduleName) {
                 <div id="chat-display" style="background:#111; padding:20px; border-radius:12px; height:400px; border:1px solid #333; overflow-y:auto; margin-bottom:15px; display:flex; flex-direction:column;">
                     <p style="color:#888; text-align:center;">Assalam-o-Alaikum! Main Nawab ZADA ka banaya hua AI hoon. Main aapki kya madad kar sakta hoon?</p>
                 </div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="user-query" placeholder="Sawal poochein..." onkeypress="if(event.key==='Enter') askNawabAI()" style="flex:1; padding:15px; background:#222; border:1px solid #444; color:#fff; border-radius:8px; outline:none;">
-                    <button id="send-btn" onclick="askNawabAI()" style="padding:15px 30px; background:var(--primary); border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#000;">SEND</button>
+                
+                <div style="display:flex; gap:10px; background: #222; padding: 5px; border-radius: 10px; border: 1px solid #444;">
+                    <input type="text" id="user-query" placeholder="Sawal poochein..." 
+                        onkeypress="if(event.key==='Enter') askNawabAI()" 
+                        style="flex:1; padding:15px; background:transparent; border:none; color:#fff; outline:none; font-size:16px;">
+                    
+                    <button id="send-btn" onclick="askNawabAI()" 
+                        style="padding:10px 25px; background:var(--primary); border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#000; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-paper-plane"></i> SEND
+                    </button>
                 </div>
             </div>
         `;
@@ -70,7 +81,7 @@ function loadModule(moduleName) {
                 <h2 style="color:var(--primary);"><i class="fas fa-mobile-alt"></i> Device Safety Hub</h2>
                 <p>Apne mobile ka model likhein taake hum uski security check kar saken:</p>
                 <div style="display:flex; gap:10px; margin-top:20px;">
-                    <input type="text" id="phoneModel" placeholder="e.g. Vivo V20, Samsung S23..." style="flex:1; padding:15px; background:#222; border:none; color:#fff; border-radius:8px;">
+                    <input type="text" id="phoneModel" placeholder="e.g. Vivo V20, Samsung S23..." style="flex:1; padding:15px; background:#222; border:none; color:#fff; border-radius:8px; outline:none;">
                     <button onclick="checkSafety()" style="padding:15px 25px; background:var(--primary); border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#000;">CHECK</button>
                 </div>
                 <div id="safetyResult" style="margin-top:30px;"></div>
@@ -97,4 +108,3 @@ function checkSafety() {
 
 // Initialize
 window.onload = () => loadModule('ai');
-            
