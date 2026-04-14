@@ -1,4 +1,4 @@
-// Nawab ZADA Guardian - Final Brain
+// Nawab ZADA Guardian - 
 const GEMINI_API_KEY = "AIzaSyCooWFRTLsgV4t3fsxQ92I8sHoawbMGfbk";
 
 async function askNawabAI() {
